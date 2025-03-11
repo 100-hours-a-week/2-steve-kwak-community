@@ -1,0 +1,99 @@
+/* 공통 스타일 적용 */
+@import url("../common/common.css");
+
+/* 전체 페이지 스타일 */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* 헤더 스타일 */
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 15px 0; /* 헤더의 여백을 줄여서 위로 당김 */
+    border-bottom: 1px solid #ddd;
+}
+
+/* 아무 말 대잔치 타이틀 (common.css 스타일을 그대로 유지) */
+.title {
+    font-size: 36px; /* common.css 기준으로 동일하게 설정 */
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+
+/* 로그인 컨테이너 */
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    margin-top: 30px; /* 로그인 창과 타이틀 사이 간격 조정 (더 위로 배치) */
+}
+
+/* 입력 그룹 스타일 */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 오류 메시지 스타일 */
+.error-message {
+    color: red;
+    font-size: 12px;
+    height: 14px;
+}
+
+/* 버튼 스타일 */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#login-btn {
+    background-color: #ACA0EB;
+    color: white;
+}
+
+#login-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#signup-btn {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: #f0f0f0;
+    padding: 8px;
+    border-radius: 5px;
+}
