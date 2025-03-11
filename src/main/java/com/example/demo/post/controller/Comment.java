@@ -1,34 +1,36 @@
-package com.example.demo.domain;
+package com.example.demo.post.controller;
+
+import com.example.demo.login.domain.User;
+import com.example.demo.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
 import java.time.LocalDateTime;
 
-@Entity @Getter
-@Table(name = "user")
+@Entity
+@Table(name = "comment")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 255)
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false, length = 255)
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    @Column(nullable = false, length = 255)
-    private String nickname;
-
-    @Column(name = "profileimage_url", length = 255)
-    private String profileImageUrl;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
