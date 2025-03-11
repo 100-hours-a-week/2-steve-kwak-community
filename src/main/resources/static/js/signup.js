@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("backBtn").addEventListener("click", function () {
-        window.location.href = "/templates/login.html";
+        window.location.href = "/users/login";
     });
 
     document.getElementById("profilePic").addEventListener("change", function (event) {
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (response.ok) {
             alert("회원가입 성공!");
-            window.location.href = "/templates/login.html";
+            window.location.href = "/users";
         } else {
             alert(data.message || "회원가입 실패");
         }
