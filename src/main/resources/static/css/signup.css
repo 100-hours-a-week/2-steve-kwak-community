@@ -1,0 +1,127 @@
+/* 공통 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f9f9f9;
+}
+
+/* 상단 헤더 */
+header {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 0;
+}
+
+/* 헤더 컨테이너: 제목만 가운데 배치 */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 제목을 가운데 정렬 */
+    position: relative;
+    width: 100%;  /* 전체 가로를 차지 */
+}
+
+/* 뒤로가기 버튼 */
+#backBtn {
+    position: absolute;
+    left: 10px; /* 왼쪽으로 10px 위치 */
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    z-index: 1; /* 버튼을 제목 위로 표시 */
+}
+
+/* 제목 스타일 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto; /* 가운데 정렬 */
+    padding-left: 40px; /* 뒤로가기 버튼과 겹치지 않게 공간 추가 */
+}
+
+/* 회원가입 박스 */
+.signup-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* 제목과 회원가입 박스 사이 간격 */
+}
+
+.signup-box h2 {
+    font-size: 22px;
+}
+
+/* 프로필 사진 업로드 */
+.profile-upload {
+    margin: 20px 0;
+}
+
+.profile-upload input {
+    display: none;
+}
+
+.profile-upload img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #ccc;
+}
+
+/* 헬퍼 텍스트 */
+.helper-text {
+    font-size: 12px;
+    color: gray;
+}
+
+/* 입력 필드 스타일 */
+.input-group {
+    margin: 10px 0;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 회원가입 버튼 스타일 */
+.signup-btn {
+    width: 100%;
+    padding: 10px;
+    background: #7A6FFA;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup-btn:hover {
+    background: #5A4FCF;
+}
+
+/* 로그인 링크 */
+.login-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
