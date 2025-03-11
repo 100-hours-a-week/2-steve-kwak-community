@@ -7,3 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  web:
+    resources:
+      static-locations: classpath:/static/
