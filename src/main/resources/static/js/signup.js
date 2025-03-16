@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (response.ok) {
             alert("회원가입 성공!");
-            window.location.href = "/users";
+            window.location.href = "/users/login";
         } else {
             alert(data.message || "회원가입 실패");
         }
