@@ -1,13 +1,13 @@
 package com.example.demo.login.domain;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity
+@Getter
+@Setter // 업데이트 가능하도록 추가
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,4 +35,11 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    // ✅ 회원 정보 수정 메서드 추가
+    public void updateUser(String nickname, String profileImageUrl) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
