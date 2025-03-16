@@ -25,6 +25,10 @@ public class PostController {
     public String getAllPostsPage() {
         return "posts"; // templates 폴더에서 posts.html 반환
     }
+    @GetMapping("/makepost")
+    public  String getMakePostPage(){
+        return "makepost";
+    }
 
     // 게시글 목록 조회 (데이터 API)
     @GetMapping("/api")
