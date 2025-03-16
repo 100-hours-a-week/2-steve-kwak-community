@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
     // 헤더 동적 로드
-    const response = await fetch("header.html");
+    const response = await fetch("/header.html");
     const headerHtml = await response.text();
     document.body.insertAdjacentHTML("afterbegin", headerHtml);
 
