@@ -35,15 +35,16 @@ public class PostService {
 
     // 게시글 수정 (setter 활용)
     @Transactional
-    public Post updatePost(Long postId, String title, String content, String imageUrl) {
-        Post post = getPostById(postId).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
-        post.setTitle(title);
-        post.setContent(content);
-        post.setImageUrl(imageUrl);
-        post.setUpdatedAt(LocalDateTime.now());
-
-        return postRepository.save(post);
+    public Optional<Post> updatePost(Long postId, String title, String content, String imageUrl) {
+        return postRepository.findById(postId).map(post -> {
+            post.setTitle(title);
+            post.setContent(content);
+            post.setImageUrl(imageUrl);
+            post.setUpdatedAt(LocalDateTime.now());
+            return postRepository.save(post);
+        });
     }
+
 
     // 게시글 삭제 (boolean 반환)
     @Transactional
