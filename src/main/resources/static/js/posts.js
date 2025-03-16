@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // 게시글 목록 가져오기
 async function fetchPosts() {
     try {
-        const response = await fetch("/posts");
+        const response = await fetch("/posts/api");  // /api/posts로 경로 변경
         if (!response.ok) throw new Error("게시글을 불러올 수 없습니다.");
 
         const posts = await response.json();
@@ -16,7 +16,6 @@ async function fetchPosts() {
     }
 }
 
-// 게시글 렌더링
 // 게시글 렌더링
 function renderPosts(posts) {
     const postList = document.getElementById("post-list");
@@ -33,10 +32,10 @@ function renderPosts(posts) {
         postItem.classList.add("post-item");
         postItem.innerHTML = `
             <h3 class="post-title">${post.title}</h3>
-            <p class="post-author">${post.author}</p>
+            <p class="post-author">${post.author}</p> 
             <p class="post-date">${new Date(post.createdAt).toLocaleString()}</p>
-            <p class="post-likes">👍 ${post.likecount} 좋아요</p>
-            <p class="post-comments">💬 ${post.commentcount} 댓글</p>
+            <p class="post-likes">👍 ${post.likeCount} 좋아요</p>
+            <p class="post-comments">💬 ${post.commentCount} 댓글</p>
         `;
 
         postItem.addEventListener("click", () => {
@@ -50,9 +49,3 @@ function renderPosts(posts) {
         postList.appendChild(postItem);
     });
 }
-
-
-// 게시글 작성 페이지 이동
-document.getElementById("create-post").addEventListener("click", () => {
-    window.location.href = "../makepost/makepost.html";
-});
