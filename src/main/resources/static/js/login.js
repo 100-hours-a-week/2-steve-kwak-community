@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 alert("로그인 성공!");
                 //localStorage.setItem("token", data.data.token); //추후 수정
-                window.location.href = "../posts/posts.html";
+                window.location.href = "/posts";
             } else {
                 alert(data.message || "로그인 실패");
             }
