@@ -11,13 +11,18 @@
 </head>
 <body>
 
-
 <main>
     <div class="post-header">
         <button id="create-post">게시글 작성</button>
     </div>
     <section id="post-list"></section>
 </main>
+
+<script>
+    document.getElementById("create-post").addEventListener("click", function() {
+        window.location.href = "/posts/makepost";
+    });
+</script>
 
 </body>
 </html>
