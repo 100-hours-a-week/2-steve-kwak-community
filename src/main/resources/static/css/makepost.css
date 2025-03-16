@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* 헤더 */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 15px;
+    background-color: #f8f8f8;
+}
+
+/* 제목 가운데 정렬 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 드롭다운 메뉴 */
+.dropdown {
+    position: absolute;
+    right: 20px;
+}
+
+.dropbtn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 드롭다운 내용 */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 10px;
+    width: 150px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content li {
+    padding: 10px;
+    text-align: left;
+}
+
+.dropdown-content li a {
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
+.dropdown-content li:hover {
+    background-color: #f0f0f0;
+}
+
+/* 드롭다운 활성화 */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 폼 중앙 정렬 */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 500px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* 버튼 스타일 */
+button {
+    background-color: #ACA0EB;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:disabled {
+    background-color: gray;
+}
