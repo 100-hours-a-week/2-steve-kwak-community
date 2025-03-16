@@ -1,17 +1,19 @@
 package com.example.demo.post.controller;
 
 import com.example.demo.post.domain.Post;
+import com.example.demo.post.dto.PostResponseDto;
 import com.example.demo.post.service.PostService;
 import com.example.demo.login.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
@@ -20,17 +22,28 @@ public class PostController {
 
     // 게시글 목록 조회
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public String getAllPostsPage() {
+        return "posts"; // templates 폴더에서 posts.html 반환
     }
 
-    // 게시글 상세 조회
+    // 게시글 목록 조회 (데이터 API)
+    @GetMapping("/api")
+    @ResponseBody
+    public ResponseEntity<List<PostResponseDto>> getAllPostsApi() {
+        List<PostResponseDto> postDto = postService.getAllPosts().stream()
+                .map(PostResponseDto::new)
+                .toList();
+        return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
+    }
+
+    // 게시글 상세 조회 (DTO 적용)
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId) {
         return postService.getPostById(postId)
-                .map(ResponseEntity::ok)
+                .map(post -> ResponseEntity.ok(new PostResponseDto(post)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     // 게시글 작성
     @PostMapping
