@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/makepost.css">
+    <script src="/js/common.js" defer></script>
+    <script src="/js/makepost.js" defer></script>
+</head>
+<body>
+
+<main>
+    <form id="post-form">
+        <label for="title">제목*</label>
+        <input type="text" id="title" maxlength="26" placeholder="제목을 입력해주세요. (최대 26글자)">
+
+        <label for="content">내용*</label>
+        <textarea id="content" placeholder="내용을 입력해주세요."></textarea>
+
+        <label for="image">이미지</label>
+        <input type="file" id="image">
+
+        <button type="submit" id="submit-btn" disabled>완료</button>
+    </form>
+</main>
+
+</body>
+</html>
