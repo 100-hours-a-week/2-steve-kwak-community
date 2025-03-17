@@ -59,6 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             if (response.ok) {
                 alert("로그인 성공!");
+
+                // user_id 저장 (API 응답에 id가 포함됨)
+                if (data.id) {
+                    localStorage.setItem("user_id", data.id);
+                }
+
                 //localStorage.setItem("token", data.data.token); //추후 수정
                 window.location.href = "/posts";
             } else {
