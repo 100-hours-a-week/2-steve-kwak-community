@@ -43,7 +43,7 @@ function renderPosts(posts) {
                 alert("게시글 ID가 없습니다.");
                 return;
             }
-            window.location.href = `../postDetail/postDetail.html?id=${post.id}`;
+            window.location.href = `/posts/api/${post.id}`;
         });
 
         postList.appendChild(postItem);
