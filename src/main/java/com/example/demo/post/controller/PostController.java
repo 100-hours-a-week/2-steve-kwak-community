@@ -8,6 +8,7 @@ import com.example.demo.login.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -42,14 +43,36 @@ public class PostController {
         return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
     }
 
-    // 게시글 상세 조회 (DTO 적용)
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long postId) {
-        return postService.getPostById(postId)
-                .map(post -> ResponseEntity.ok(new PostResponseDto(post)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/api/{postId}")
+    public String getPostDetailPage(@PathVariable Long postId, Model model) {
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        model.addAttribute("postId", postId);
+        model.addAttribute("post", post);
+
+        return "postdetail"; // 서버 측에서 HTML을 렌더링하여 반환
+    }
+    @GetMapping("/postedit/{postId}")
+    public String getEditDetailPage(@PathVariable Long postId, Model model) {
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        model.addAttribute("postId", postId);
+
+        return "postedit"; // 서버 측에서 HTML을 렌더링하여 반환
     }
 
+    // 게시글 상세 조회 (JSON API)
+    @GetMapping("/{postId}")
+    @ResponseBody
+    public ResponseEntity<PostResponseDto> getPostDetailApi(@PathVariable Long postId) {
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        PostResponseDto postDto = new PostResponseDto(post); // Post -> PostResponseDto 변환
+        return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
+    }
 
     // 게시글 작성
     @PostMapping
@@ -58,7 +81,6 @@ public class PostController {
         if (author == null) {
             return ResponseEntity.badRequest().body(null);  // 사용자가 없으면 400 에러 반환
         }
-        System.out.println("📌 받은 데이터: " + request);
 
         // imageUrl은 선택적인 값이므로 null일 수 있음
         String imageUrl = request.getOrDefault("imageUrl", null);
@@ -75,8 +97,6 @@ public class PostController {
                 .createdAt(LocalDateTime.now())  // 생성 시간
                 .updatedAt(LocalDateTime.now())  // 업데이트 시간
                 .build();
-
-        System.out.println("📌 저장될 데이터: " + post);
 
         // 게시글 저장 후 응답 반환
         return ResponseEntity.ok(postService.createPost(post));  // 성공적으로 저장된 게시글을 반환
