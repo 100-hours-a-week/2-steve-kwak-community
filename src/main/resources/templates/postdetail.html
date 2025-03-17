@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" href="/css/common1.css">
+    <link rel="stylesheet" href="/css/postdetail.css">
+    <script defer src="/js/common1.js"></script>
+    <script defer src="/js/postdetail.js"></script>
+</head>
+<body th:data-post-id="${postId}">  <!-- 서버에서 넘겨준 postId 값을 data-속성에 삽입 -->
+
+<main>
+    <section class="post-container">
+        <div class="post-header">
+            <h1 class="post-title"></h1>
+            <div class="post-actions">
+                <button class="edit-btn">수정</button>
+                <button class="delete-btn">삭제</button>
+            </div>
+        </div>
+
+        <div class="post-meta">
+            <span class="post-author"></span>
+            <span class="post-date"></span>
+        </div>
+        <p class="post-content"></p>
+
+        <div class="post-stats">
+            <button class="like-btn">👍 0</button>
+            <span class="view-count">조회수 0</span>
+            <span class="comment-count">댓글 0</span>
+        </div>
+    </section>
+
+    <section class="comment-section">
+        <h2>댓글</h2>
+        <textarea placeholder="댓글을 입력하세요" class="comment-input"></textarea>
+        <button class="comment-submit">댓글 등록</button>
+        <ul class="comment-list"></ul>
+    </section>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="modal hidden">
+        <div class="modal-content">
+            <p>게시글을 삭제하시겠습니까?</p>
+            <button class="modal-cancel">취소</button>
+            <button class="modal-confirm">확인</button>
+        </div>
+    </div>
+</main>
+
+<script>
+</script>
+
+</body>
+</html>
