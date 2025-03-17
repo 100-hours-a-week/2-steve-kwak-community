@@ -1,0 +1,84 @@
+/* 전체 페이지 스타일 */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+/* 헤더 스타일 */
+header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative; /* 버튼을 상대적으로 배치하려면 parent의 position을 relative로 설정 */
+    padding: 20px 20px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 아무말대잔치 타이틀 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* 뒤로가기 버튼 (화살표 모양) */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #7A6FFA;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;  /* 절대 위치로 설정 */
+    left: 10px;  /* 타이틀 왼쪽에 배치 */
+    top: 50%;  /* 세로 중앙 정렬 */
+    transform: translateY(-50%);  /* 세로 중앙을 정확히 맞추기 위해 */
+    z-index: 2;
+}
+
+.back-btn:hover {
+    color: #5A4FCF;
+}
+
+/* 프로필 드롭다운 */
+.profile-dropdown {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
