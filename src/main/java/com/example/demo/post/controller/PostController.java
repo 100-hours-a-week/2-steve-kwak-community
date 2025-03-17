@@ -1,5 +1,6 @@
 package com.example.demo.post.controller;
 
+import com.example.demo.login.service.UserService;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.dto.PostResponseDto;
 import com.example.demo.post.service.PostService;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
     // 게시글 목록 조회
     @GetMapping
@@ -52,22 +54,34 @@ public class PostController {
     // 게시글 작성
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody Map<String, String> request) {
-        User author = new User();
-        author.setId(Long.parseLong(request.get("userId")));
+        User author = userService.findById(Long.parseLong(request.get("userId")));
+        if (author == null) {
+            return ResponseEntity.badRequest().body(null);  // 사용자가 없으면 400 에러 반환
+        }
+        System.out.println("📌 받은 데이터: " + request);
 
+        // imageUrl은 선택적인 값이므로 null일 수 있음
+        String imageUrl = request.getOrDefault("imageUrl", null);
+
+        // Post 객체 생성
         Post post = Post.builder()
-                .author(author)
-                .title(request.get("title"))
-                .content(request.get("content"))
-                .imageUrl(request.get("imageUrl"))
-                .likeCount(0)
-                .commentCount(0)
-                .viewCount(0)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .author(author)  // 작성자 설정
+                .title(request.get("title"))  // 제목
+                .content(request.get("content"))  // 내용
+                .imageUrl(imageUrl)  // 이미지 URL (null일 수 있음)
+                .likeCount(0)  // 좋아요 수 초기화
+                .commentCount(0)  // 댓글 수 초기화
+                .viewCount(0)  // 조회 수 초기화
+                .createdAt(LocalDateTime.now())  // 생성 시간
+                .updatedAt(LocalDateTime.now())  // 업데이트 시간
                 .build();
-        return ResponseEntity.ok(postService.createPost(post));
+
+        System.out.println("📌 저장될 데이터: " + post);
+
+        // 게시글 저장 후 응답 반환
+        return ResponseEntity.ok(postService.createPost(post));  // 성공적으로 저장된 게시글을 반환
     }
+
 
     // 게시글 수정
     @PutMapping("/{postId}")
