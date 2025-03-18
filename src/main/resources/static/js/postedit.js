@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
+
     try {
         const response = await fetch(`/posts/${postId}`);
         if (!response.ok) throw new Error("게시글을 불러오지 못했습니다.");
