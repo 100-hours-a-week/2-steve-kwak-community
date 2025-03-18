@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", async function () {
     // 헤더 동적 로드
-    const response = await fetch("/header.html");
+    const response = await fetch("/header");
     const headerHtml = await response.text();
     document.body.insertAdjacentHTML("afterbegin", headerHtml);
 
     setupDropdown();
+    setupBackButton();
 });
 
 function setupDropdown() {
@@ -24,13 +25,25 @@ function setupDropdown() {
     dropdownItems.forEach((item) => {
         item.addEventListener("click", (event) => {
             if (event.target.id === "edit-profile") {
-                window.location.href = `../editprofile/editprofile.html?user_id=${userId}`;
+                window.location.href = `/users/editprofile/${userId}`;
             } else if (event.target.id === "edit-password") {
-                window.location.href = `../editpassword/editpassword.html?user_id=${userId}`;
+                window.location.href = `/users/${userId}/password`;
             } else if (event.target.classList.contains("logout")) {
                 localStorage.removeItem("user_id"); // 로그아웃 시 user_id 삭제
-                window.location.href = "../login/login.html";
+                window.location.href = "/users/login";
             }
         });
     });
+
 }
+function setupBackButton() {
+    const backBtn = document.querySelector("#back-btn");
+
+    if (backBtn) {
+        backBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            window.location.href = "/posts"; // 뒤로가기 버튼 클릭 시 경로 이동
+        });
+    }
+}
+
