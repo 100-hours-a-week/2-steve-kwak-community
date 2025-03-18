@@ -18,4 +18,15 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);  // Optional<User> 반환
         return user.orElse(null);  // 사용자 없으면 null 반환
     }
+    // 비밀번호 변경 로직
+    public boolean updatePassword(Long userId, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(newPassword); // 실제 적용 시 암호화 필요
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 }
