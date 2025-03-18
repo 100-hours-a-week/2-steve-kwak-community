@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "/posts";
         return;
     }
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/users/login"; // 로그인 페이지로 이동
+        return;
+    }
 
     try {
         const response = await fetch(`/posts/${postId}`);  // 경로 수정
