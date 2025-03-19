@@ -55,4 +55,13 @@ public class PostService {
         }
         return false;
     }
+    @Transactional
+    public void incrementViewCount(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        post.setViewCount(post.getViewCount() + 1);  // 조회수 1 증가
+        postRepository.save(post);  // 변경된 게시글 저장
+    }
+
 }
