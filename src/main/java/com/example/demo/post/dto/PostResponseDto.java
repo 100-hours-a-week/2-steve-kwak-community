@@ -2,30 +2,35 @@ package com.example.demo.post.dto;
 
 import com.example.demo.post.domain.Post;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class PostResponseDto {
+
     private Long id;
     private String title;
     private String content;
-    private String author;
     private String imageUrl;
-    private int likeCount;
+    private String author;  // author는 이제 User의 nickname을 포함
     private int commentCount;
     private int viewCount;
-    private LocalDateTime createdAt;
+    private int likeCount;
+    private String createdAt;  // createdAt 필드 추가
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.author = post.getAuthor().getNickname();
         this.imageUrl = post.getImageUrl();
-        this.likeCount = post.getLikeCount();
         this.commentCount = post.getCommentCount();
         this.viewCount = post.getViewCount();
-        this.createdAt = post.getCreatedAt();
+        this.author = post.getAuthor().getNickname();  // author의 nickname을 사용
+        this.likeCount = post.getLikeCount();  // likeCount를 추가해야 합니다.
+        this.createdAt = post.getCreatedAt().toString();  // createdAt 필드 추가 및 변환
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 }
