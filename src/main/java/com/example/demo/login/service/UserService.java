@@ -4,6 +4,7 @@ import com.example.demo.login.domain.User;
 import com.example.demo.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,15 +19,30 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);  // Optional<User> 반환
         return user.orElse(null);  // 사용자 없으면 null 반환
     }
-    // 비밀번호 변경 로직
-    public boolean updatePassword(Long userId, String newPassword) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPassword(newPassword); // 실제 적용 시 암호화 필요
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+    // 닉네임 변경 (예외 던지는 방식)
+    @Transactional
+    public void updateNickname(Long userId, String newNickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        user.setNickname(newNickname);
+        userRepository.save(user);
+    }
+
+    // 비밀번호 변경 (예외 던지는 방식)
+    @Transactional
+    public void updatePassword(Long userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        user.setPassword(newPassword); // 실제 적용 시 암호화 필요
+        userRepository.save(user);
+    }
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        userRepository.delete(user);
     }
 }
