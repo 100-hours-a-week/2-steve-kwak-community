@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원정보 수정</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/editprofile.css">
+    <script defer src="/js/common.js"></script>
+    <script defer src="/js/editprofile.js"></script>
+</head>
+<body>
+
+<!-- 공통 헤더 포함 (중복 방지) -->
+<div id="header-container"></div>
+
+<main>
+    <h2>회원정보수정</h2>
+    <div class="profile-container">
+        <img src="profile-placeholder.png" alt="프로필 사진" class="profile-pic">
+        <button class="change-btn">변경</button>
+    </div>
+
+    <form class="form-container">
+        <input type="hidden" id="user-id" th:value="${userId}">
+        <div class="input-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email">
+        </div>
+        <div class="input-group">
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" placeholder="닉네임 입력">
+            <small class="helper-text"></small>
+        </div>
+
+        <button type="button" class="button update-btn">수정하기</button>
+        <button type="button" class="button delete-btn">회원 탈퇴</button>
+    </form>
+
+    <div class="modal hidden">
+        <p>수정 완료</p>
+        <button class="close-btn">닫기</button>
+    </div>
+</main>
+
+
+
+</body>
+</html>
