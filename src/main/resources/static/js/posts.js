@@ -37,11 +37,18 @@ function renderPosts(posts) {
         const postItem = document.createElement("div");
         postItem.classList.add("post-item");
         postItem.innerHTML = `
-            <h3 class="post-title">${post.title}</h3>
-            <p class="post-author">${post.author}</p> 
-            <p class="post-date">${new Date(post.createdAt).toLocaleString()}</p>
-            <p class="post-likes">👍 ${post.likeCount} 좋아요</p>
-            <p class="post-comments">💬 ${post.commentCount} 댓글</p>
+            <div class="post-header">
+                <h3 class="post-title">${post.title}</h3>
+                <p class="post-author">${post.author}</p> 
+            </div>
+            <div class="post-meta">
+                <p class="post-date">${new Date(post.createdAt).toLocaleString()}</p>
+                <div class="post-stats">
+                    <p class="post-likes">👍 ${post.likeCount}</p>
+                    <p class="post-comments">💬 ${post.commentCount}</p>
+                    <p class="post-views">👁️ ${post.viewCount}</p>
+                </div>
+            </div>
         `;
 
         postItem.addEventListener("click", () => {
