@@ -25,7 +25,7 @@ function setupDropdown() {
     dropdownItems.forEach((item) => {
         item.addEventListener("click", (event) => {
             if (event.target.id === "edit-profile") {
-                window.location.href = `/users/editprofile/${userId}`;
+                window.location.href = `/users/${userId}/profile`;
             } else if (event.target.id === "edit-password") {
                 window.location.href = `/users/${userId}/password`;
             } else if (event.target.classList.contains("logout")) {
