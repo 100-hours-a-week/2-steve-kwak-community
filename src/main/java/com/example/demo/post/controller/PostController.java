@@ -3,6 +3,7 @@ package com.example.demo.post.controller;
 import com.example.demo.login.service.UserService;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.dto.PostResponseDto;
+import com.example.demo.post.service.PostLikeService;
 import com.example.demo.post.service.PostService;
 import com.example.demo.login.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final PostLikeService postLikeService;
 
     // 게시글 목록 조회
     @GetMapping
@@ -33,15 +35,19 @@ public class PostController {
         return "makepost";
     }
 
-    // 게시글 목록 조회 (데이터 API)
     @GetMapping("/api")
     @ResponseBody
     public ResponseEntity<List<PostResponseDto>> getAllPostsApi() {
         List<PostResponseDto> postDto = postService.getAllPosts().stream()
-                .map(PostResponseDto::new)
+                .map(post -> {
+                    PostResponseDto dto = new PostResponseDto(post);
+                    dto.setLikeCount(postLikeService.getLikeCountByPostId(post.getId())); // likeCount 설정
+                    return dto;
+                })
                 .toList();
         return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
     }
+
 
     @GetMapping("/api/{postId}")
     public String getPostDetailPage(@PathVariable Long postId, Model model) {
@@ -69,6 +75,8 @@ public class PostController {
     public ResponseEntity<PostResponseDto> getPostDetailApi(@PathVariable Long postId) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        // 조회수 증가
+        postService.incrementViewCount(postId);
 
         PostResponseDto postDto = new PostResponseDto(post); // Post -> PostResponseDto 변환
         return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
@@ -91,7 +99,6 @@ public class PostController {
                 .title(request.get("title"))  // 제목
                 .content(request.get("content"))  // 내용
                 .imageUrl(imageUrl)  // 이미지 URL (null일 수 있음)
-                .likeCount(0)  // 좋아요 수 초기화
                 .commentCount(0)  // 댓글 수 초기화
                 .viewCount(0)  // 조회 수 초기화
                 .createdAt(LocalDateTime.now())  // 생성 시간
