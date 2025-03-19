@@ -1,0 +1,158 @@
+/* 전체 레이아웃 */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* 헤더 스타일 */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+}
+
+.title {
+    flex: 1;
+    text-align: center;
+}
+
+/* 프로필 드롭다운 */
+.profile-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    width: 120px;
+    text-align: center;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #E9E9E9;
+}
+
+/* 회원정보 수정 페이지 */
+main {
+    padding: 20px;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.change-btn {
+    background-color: #ddd;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* 입력 폼 */
+.form-container {
+    width: 250px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+input {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* 버튼 */
+.button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update-btn {
+    background-color: #A98EF0;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+/* 모달창 */
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+    display: none;
+}
+
+.close-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #A98EF0;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
