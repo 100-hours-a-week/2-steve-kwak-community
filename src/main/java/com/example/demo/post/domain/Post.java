@@ -32,17 +32,18 @@ public class Post {
     private String imageUrl;
 
     @Column(nullable = false)
-    private int likeCount;
-
-    @Column(nullable = false)
     private int commentCount;
 
     @Column(nullable = false)
     private int viewCount;
+
+    @Column(nullable = false)
+    private int likeCount;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
 }
