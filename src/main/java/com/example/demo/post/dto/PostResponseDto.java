@@ -12,11 +12,11 @@ public class PostResponseDto {
     private String title;
     private String content;
     private String imageUrl;
-    private String author;  // author는 이제 User의 nickname을 포함
+    private String author;
     private int commentCount;
     private int viewCount;
     private int likeCount;
-    private String createdAt;  // createdAt 필드 추가
+    private String createdAt;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -25,12 +25,12 @@ public class PostResponseDto {
         this.imageUrl = post.getImageUrl();
         this.commentCount = post.getCommentCount();
         this.viewCount = post.getViewCount();
-        this.author = post.getAuthor().getNickname();  // author의 nickname을 사용
-        this.likeCount = post.getLikeCount();  // likeCount를 추가해야 합니다.
-        this.createdAt = post.getCreatedAt().toString();  // createdAt 필드 추가 및 변환
-    }
+        this.author = post.getAuthor().getNickname();
+        this.createdAt = post.getCreatedAt().toString();
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+        // 🔥 회원 탈퇴한 사용자의 좋아요 제외
+        this.likeCount = (int) post.getLikes().stream()
+                .filter(like -> !like.getUser().isDeleted()) // 탈퇴하지 않은 사용자만 카운트
+                .count();
     }
 }
