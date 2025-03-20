@@ -1,9 +1,13 @@
 package com.example.demo.login.domain;
 
+import com.example.demo.post.domain.Comment;
+import com.example.demo.post.domain.Post;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,10 +40,11 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // ✅ 회원 정보 수정 메서드 추가
-    public void updateUser(String nickname, String profileImageUrl) {
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
-        this.updatedAt = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Post> posts;
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;  // 회원 탈퇴 여부 (기본값: false)
+
 }
