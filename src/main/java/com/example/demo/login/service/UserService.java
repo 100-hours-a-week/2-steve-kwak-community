@@ -2,6 +2,8 @@ package com.example.demo.login.service;
 
 import com.example.demo.login.domain.User;
 import com.example.demo.login.repository.UserRepository;
+import com.example.demo.post.repository.CommentRepository;
+import com.example.demo.post.repository.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentRepository commentRepository;
 
     // 사용자 ID로 사용자 조회
     public User findById(Long id) {
@@ -43,6 +47,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
+        postLikeRepository.deleteByUserId(userId);
+        commentRepository.deleteByUserId(userId);
         userRepository.delete(user);
     }
 }
