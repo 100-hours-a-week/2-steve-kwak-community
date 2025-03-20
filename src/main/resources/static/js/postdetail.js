@@ -65,7 +65,7 @@ document.querySelector(".like-btn").addEventListener("click", async () => {
         document.querySelector(".like-btn").innerHTML = `👍 ${updatedPost.likeCount}`;  // 최신 좋아요 수 업데이트
     } catch (error) {
         console.error(error);
-        alert("좋아요를 반영하지 못했습니다.");
+        alert("이미 좋아요를 누른 게시물입니다.");
     }
 });
 
