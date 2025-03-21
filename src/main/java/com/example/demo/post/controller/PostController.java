@@ -7,6 +7,7 @@ import com.example.demo.post.service.PostLikeService;
 import com.example.demo.post.service.PostService;
 import com.example.demo.login.domain.User;
 import com.example.demo.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +47,6 @@ public class PostController {
         try {
             // SecurityContext에서 인증된 사용자 정보 가져오기
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("인증정보: " + authentication);
 
             // Principal을 User 객체로 변환하여 userId 추출
             Object principal = authentication.getPrincipal();
@@ -53,9 +54,7 @@ public class PostController {
 
             if (principal instanceof User) {
                 userId = ((User) principal).getId(); // User 객체에서 ID 가져오기
-                System.out.println("인증 User ID: " + userId);
             } else {
-                System.out.println("인증 정보가 User 객체가 아님: " + principal);
             }
 
             // 인증된 사용자의 게시글 목록 가져오기
@@ -73,7 +72,7 @@ public class PostController {
 
 
 
-    @GetMapping("/api/{postId}")
+    @GetMapping("/api1/{postId}")
     public String getPostDetailPage(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
@@ -96,15 +95,40 @@ public class PostController {
     // 게시글 상세 조회 (JSON API)
     @GetMapping("/{postId}")
     @ResponseBody
-    public ResponseEntity<PostResponseDto> getPostDetailApi(@PathVariable Long postId) {
-        Post post = postService.getPostById(postId)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
-        // 조회수 증가
-        postService.incrementViewCount(postId);
+    public ResponseEntity<?> getPostDetailApi(@PathVariable Long postId) {
+        try {
+            // SecurityContext에서 인증된 사용자 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        PostResponseDto postDto = new PostResponseDto(post); // Post -> PostResponseDto 변환
-        return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
+            // 인증된 사용자 여부 확인
+            if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+            }
+
+            // Principal을 User 객체로 변환하여 userId 추출
+            Object principal = authentication.getPrincipal();
+            Long userId = null;
+
+            if (principal instanceof User) {
+                userId = ((User) principal).getId(); // User 객체에서 ID 가져오기
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 사용자입니다.");
+            }
+
+            // 게시글 조회
+            Post post = postService.getPostById(postId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+
+            // 조회수 증가
+            postService.incrementViewCount(postId);
+
+            PostResponseDto postDto = new PostResponseDto(post);
+            return ResponseEntity.ok(postDto); // JSON 형태로 게시글 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
     }
+
 
     // 게시글 작성
     @PostMapping
@@ -136,18 +160,53 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Map<String, String> request) {
-        return postService.updatePost(postId, request.get("title"), request.get("content"), request.get("imageUrl"))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Map<String, String> postData, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        System.out.println("게시글 수정 postid: " + postId); // 토큰 출력
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 토큰이 없거나 형식이 잘못됨
+        }
+
+        token = token.substring(7);  // "Bearer "를 제거하고 토큰만 추출
+        System.out.println("게시글 수정 Extracted Token: " + token); // 토큰 출력
+
+        Long userId = jwtUtil.extractUserId(token);
+        System.out.println("게시글 수정 User ID: " + userId); // 사용자 ID 출력
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 유효한 userId가 아닐 경우
+        }
+
+        // Map에서 값을 추출하여 Post 객체 생성
+        Post post = new Post();
+        post.setTitle(postData.get("title"));
+        post.setContent(postData.get("content"));
+
+        // 게시글 수정
+        Post updatedPost = postService.updatePost(postId, post, userId);
+
+        if (updatedPost == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한 없음
+        }
+
+        return ResponseEntity.ok(updatedPost);
     }
+
+
+
 
     // 게시글 삭제
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        if (postService.deletePost(postId)) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, HttpServletRequest request) {
+        // JWT 토큰에서 사용자 ID 추출
+        String token = request.getHeader("Authorization").substring(7);  // "Bearer "를 제거하고 토큰만 추출
+        Long userId = jwtUtil.extractUserId(token);
+
+        // 게시글 삭제
+        if (postService.deletePost(postId,userId)) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한 없음
     }
 }
