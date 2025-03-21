@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     // ✅ 로그인 여부 확인
     const userId = localStorage.getItem("user_id");
-    if (!userId) {
-        alert("로그인이 필요합니다.");
-        window.location.href = "/users/login"; // 로그인 페이지로 이동
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("로그인이 필요합니다1.");
+        window.location.href = "/users/login";
         return;
     }
 
