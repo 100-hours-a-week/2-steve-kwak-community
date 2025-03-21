@@ -103,8 +103,8 @@ function renderPosts(posts) {
                 alert("게시글 ID가 없습니다.");
                 return;
             }
-            console.log(`➡️ 게시글 이동: /posts/api/${post.id}`);
-            window.location.href = `/posts/api/${post.id}`;
+            console.log(`➡️ 게시글 이동: /posts/api1/${post.id}`);
+            window.location.href = `/posts/api1/${post.id}`;
         });
 
         postList.appendChild(postItem);
