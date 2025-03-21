@@ -34,26 +34,55 @@ public class PostService {
     }
 
     // 게시글 수정 (setter 활용)
+    // 게시글 수정
     @Transactional
-    public Optional<Post> updatePost(Long postId, String title, String content, String imageUrl) {
-        return postRepository.findById(postId).map(post -> {
-            post.setTitle(title);
-            post.setContent(content);
-            post.setImageUrl(imageUrl);
-            post.setUpdatedAt(LocalDateTime.now());
-            return postRepository.save(post);
-        });
+    public Post updatePost(Long postId, Post post, Long userId) {
+        Post existingPost = postRepository.findById(postId).orElse(null);
+
+        if (existingPost == null) {
+            System.out.println("Post not found for ID: " + postId); // 게시글을 찾을 수 없는 경우
+            return null; // 게시글을 찾을 수 없는 경우
+        }
+
+        // 게시글 작성자 확인
+        if (existingPost.getAuthor() == null) {
+            System.out.println("Author is null for post ID: " + postId); // 작성자가 없을 경우
+            return null; // 권한 없음 처리
+        }
+
+        System.out.println("Post Author ID: " + existingPost.getAuthor().getId()); // 게시글 작성자 ID 출력
+        System.out.println("User ID: " + userId); // 현재 사용자 ID 출력
+
+        // 작성자와 현재 사용자가 일치하는지 비교
+        if (!existingPost.getAuthor().getId().equals(userId)) {
+            System.out.println("User ID and Post Author ID do not match."); // 권한 없음 처리
+            return null; // 권한 없음
+        }
+        // 게시글 수정
+        existingPost.setTitle(post.getTitle());
+        existingPost.setContent(post.getContent());
+
+        return postRepository.save(existingPost);
     }
 
 
-    // 게시글 삭제 (boolean 반환)
+    // 게시글 삭제
     @Transactional
-    public boolean deletePost(Long postId) {
-        if (postRepository.existsById(postId)) {
-            postRepository.deleteById(postId);
-            return true;
+    public boolean deletePost(Long postId, Long userId) {
+        Post existingPost = postRepository.findById(postId).orElse(null);
+
+        if (existingPost == null) {
+            return false; // 게시글을 찾을 수 없는 경우
         }
-        return false;
+
+        // 게시글 작성자 확인
+        if (!existingPost.getAuthor().getId().equals(userId)) {
+            return false; // 작성자와 현재 사용자가 일치하지 않으면 권한 없음
+        }
+
+        // 게시글 삭제
+        postRepository.delete(existingPost);
+        return true;
     }
     @Transactional
     public void incrementViewCount(Long postId) {
