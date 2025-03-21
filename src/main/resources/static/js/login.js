@@ -60,12 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 alert("로그인 성공!");
 
-                // user_id 저장 (API 응답에 id가 포함됨)
-                if (data.id) {
-                    localStorage.setItem("user_id", data.id);
+                // JWT 토큰 저장 (API 응답에 token만 포함됨)
+                if (data.token) {
+                    localStorage.setItem("token", data.token); // JWT를 로컬 스토리지에 저장
                 }
 
-                //localStorage.setItem("token", data.data.token); //추후 수정
                 window.location.href = "/posts";
             } else {
                 alert(data.message || "로그인 실패");
