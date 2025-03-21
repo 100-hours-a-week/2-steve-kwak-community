@@ -3,6 +3,7 @@ package com.example.demo.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,6 +29,11 @@ public class SecurityConfig {
                         .requestMatchers("/users").permitAll()
                         .requestMatchers("/posts").permitAll()
                         .requestMatchers("/header1").permitAll()
+                        .requestMatchers("/posts/makepost").permitAll()
+                        .requestMatchers("/header").permitAll()
+                        .requestMatchers("/posts/api1/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/posts/**").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/posts/postedit/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
