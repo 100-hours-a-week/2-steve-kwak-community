@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // JWT 토큰 저장 (API 응답에 token만 포함됨)
                 if (data.token) {
                     localStorage.setItem("token", data.token); // JWT를 로컬 스토리지에 저장
+                    localStorage.setItem("user_id",data.userId);
                 }
 
                 window.location.href = "/posts";
