@@ -1,5 +1,6 @@
 package com.example.demo.login.controller;
 
+import com.example.demo.login.domain.Role;
 import com.example.demo.login.domain.User;
 import com.example.demo.login.service.SignupService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class SignupController {
                 .profileImageUrl(profileImageUrl)
                 .createdAt(now)
                 .updatedAt(now)
+                .role(Role.USER)
                 .build();
 
         User savedUser = signupService.registerUser(newUser);
