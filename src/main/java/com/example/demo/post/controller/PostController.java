@@ -67,11 +67,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 예외 발생 시 인증 실패 처리
         }
     }
-
-
-
-
-
     @GetMapping("/api1/{postId}")
     public String getPostDetailPage(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
@@ -79,9 +74,11 @@ public class PostController {
 
         model.addAttribute("postId", postId);
         model.addAttribute("post", post);
+        model.addAttribute("authorUserId", post.getAuthor().getId()); // 게시글 작성자 userId 추가
 
         return "postdetail"; // 서버 측에서 HTML을 렌더링하여 반환
     }
+
     @GetMapping("/postedit/{postId}")
     public String getEditDetailPage(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
