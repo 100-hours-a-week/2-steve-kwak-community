@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // 게시글 수정 버튼 클릭
 document.querySelector(".edit-btn").addEventListener("click", () => {
     const postId = document.body.getAttribute('data-post-id');
+    const token = localStorage.getItem("token");
     window.location.href = `/posts/postedit/${postId}`;
 });
 
