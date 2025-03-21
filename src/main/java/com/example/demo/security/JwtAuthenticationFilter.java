@@ -37,18 +37,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            logger.info("Extracted Token: {}", token);
+            logger.info("필터 토큰 확인: {}", token);
 
             try {
                 Long userId = jwtUtil.extractUserId(token);
-                logger.info("Extracted UserId: {}", userId);
+                logger.info("필터 아이디 추출: {}", userId);
 
                 if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     User user = userService.findById(userId);
                     if (user != null && jwtUtil.validateToken(token, user.getId())) {
-                        String role = user.getRole();
+                        String role = "USER";
                         if (role == null || role.trim().isEmpty()) {
-                            role = "ROLE_USER";
+                            role = "USER";
                         }
 
                         logger.info("Role: {}", role);
@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                         Collections.singletonList(new SimpleGrantedAuthority(role)));
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        logger.info("Token is valid, User authenticated");
+                        logger.info("필터에서 인증넣기");
                     } else {
                         logger.warn("Invalid token or expired token");
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         }
-
+        logger.info("필터 token:"+token);
         filterChain.doFilter(request, response);
     }
 }
