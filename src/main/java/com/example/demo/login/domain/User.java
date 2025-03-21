@@ -47,8 +47,8 @@ public class User {
     @Column(nullable = false)
     private boolean isDeleted = false;  // 회원 탈퇴 여부 (기본값: false)
 
-    // Role 추가
+    @Enumerated(EnumType.STRING)  // Enum 타입으로 저장
     @Column(nullable = false)
-    private String role = "USER";  // 기본 역할은 "USER"로 설정
+    private Role role = Role.USER;  // 기본 역할은 "USER"로 설정
 
 }
