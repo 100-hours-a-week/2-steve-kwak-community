@@ -34,7 +34,8 @@ public class LoginController {
         String token = jwtUtil.generateToken(authenticatedUser.getId());  // userId로 JWT 생성
 
         return ResponseEntity.ok(Map.of(
-                "token", token  // 응답에 JWT 포함
+                "token", token,  // 응답에 JWT 포함
+                "userId", authenticatedUser.getId()  // 인증된 사용자의 ID 포함
         ));
     }
 
