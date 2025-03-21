@@ -6,8 +6,12 @@ import com.example.demo.post.dto.PostResponseDto;
 import com.example.demo.post.service.PostLikeService;
 import com.example.demo.post.service.PostService;
 import com.example.demo.login.domain.User;
+import com.example.demo.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +27,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
-    private final PostLikeService postLikeService;
+    private final JwtUtil jwtUtil;
 
     // 게시글 목록 조회
     @GetMapping
@@ -38,15 +42,35 @@ public class PostController {
     @GetMapping("/api")
     @ResponseBody
     public ResponseEntity<List<PostResponseDto>> getAllPostsApi() {
-        List<PostResponseDto> postDto = postService.getAllPosts().stream()
-                .map(post -> {
-                    PostResponseDto dto = new PostResponseDto(post);
-                    dto.setLikeCount(postLikeService.getLikeCountByPostId(post.getId())); // likeCount 설정
-                    return dto;
-                })
-                .toList();
-        return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
+        try {
+            // SecurityContext에서 인증된 사용자 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("인증정보: " + authentication);
+
+            // Principal을 User 객체로 변환하여 userId 추출
+            Object principal = authentication.getPrincipal();
+            Long userId = null;
+
+            if (principal instanceof User) {
+                userId = ((User) principal).getId(); // User 객체에서 ID 가져오기
+                System.out.println("인증 User ID: " + userId);
+            } else {
+                System.out.println("인증 정보가 User 객체가 아님: " + principal);
+            }
+
+            // 인증된 사용자의 게시글 목록 가져오기
+            List<PostResponseDto> postDto = postService.getAllPosts().stream()
+                    .map(PostResponseDto::new) // PostResponseDto 생성자 활용
+                    .toList();
+
+            return ResponseEntity.ok(postDto); // 게시글 데이터를 JSON 형태로 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 예외 발생 시 인증 실패 처리
+        }
     }
+
+
+
 
 
     @GetMapping("/api/{postId}")
