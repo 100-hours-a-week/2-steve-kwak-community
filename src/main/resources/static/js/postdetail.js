@@ -1,37 +1,53 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const postId = document.body.getAttribute('data-post-id');
-    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
 
     if (!postId) {
         alert("잘못된 접근입니다.");
         window.location.href = "/posts";
         return;
     }
-    if (!userId) {
-        alert("로그인이 필요합니다.");
+    if (!token) {
+        alert("로그인이 필요합니다1.");
         window.location.href = "/users/login";
         return;
     }
 
     try {
-        const response = await fetch(`/posts/${postId}`);
+        const response = await fetch(`/posts/${postId}`, {
+            headers: { Authorization: `Bearer ${token}` } // JWT 인증 추가
+        });
+
+        if (response.status === 401) {
+            alert("로그인이 필요합니다2.");
+            window.location.href = "/users/login";
+            return;
+        }
         if (!response.ok) throw new Error("게시글을 불러오지 못했습니다.");
 
         const post = await response.json();
         document.querySelector(".post-title").textContent = post.title;
-        document.querySelector(".post-author").textContent = post.author;  // author를 수정된 방식으로 표시
+        document.querySelector(".post-author").textContent = post.author;
         document.querySelector(".post-date").textContent = post.createdAt;
         document.querySelector(".post-content").textContent = post.content;
         document.querySelector(".like-btn").innerHTML = `👍 ${post.likeCount}`;
         document.querySelector(".view-count").textContent = `조회수 ${post.viewCount}`;
         document.querySelector(".comment-count").textContent = `댓글 ${post.commentCount}`;
 
-        // 댓글 데이터 불러오기
-        const commentResponse = await fetch(`/posts/${postId}/comments`);
+        // 댓글 불러오기
+        const commentResponse = await fetch(`/posts/${postId}/comments`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (commentResponse.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/users/login";
+            return;
+        }
         if (!commentResponse.ok) throw new Error("댓글을 불러오지 못했습니다.");
 
         const comments = await commentResponse.json();
-        renderComments(comments); // 댓글 렌더링
+        renderComments(comments);
     } catch (error) {
         console.error(error);
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
@@ -44,25 +60,29 @@ document.querySelector(".edit-btn").addEventListener("click", () => {
     window.location.href = `/posts/postedit/${postId}`;
 });
 
-// 좋아요 버튼 클릭 이벤트
+// 좋아요 버튼 클릭
 document.querySelector(".like-btn").addEventListener("click", async () => {
     const postId = document.body.getAttribute('data-post-id');
-    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
 
     try {
-        // userId와 postId를 JSON 데이터로 전달
         const response = await fetch(`/posts/${postId}/like`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId: userId, postId: postId }) // 데이터로 보내기
+                Authorization: `Bearer ${token}` // JWT 인증 추가
+            }
         });
 
+        if (response.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/users/login";
+            return;
+        }
         if (!response.ok) throw new Error("좋아요 요청 실패");
 
-        const updatedPost = await response.json();  // 서버에서 최신 게시글 정보 (좋아요 갯수 포함) 받기
-        document.querySelector(".like-btn").innerHTML = `👍 ${updatedPost.likeCount}`;  // 최신 좋아요 수 업데이트
+        const updatedPost = await response.json();
+        document.querySelector(".like-btn").innerHTML = `👍 ${updatedPost.likeCount}`;
     } catch (error) {
         console.error(error);
         alert("이미 좋아요를 누른 게시물입니다.");
@@ -74,9 +94,19 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     const postId = document.body.getAttribute('data-post-id');
+    const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`/posts/${postId}`, { method: "DELETE" });
+        const response = await fetch(`/posts/${postId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` } // JWT 인증 추가
+        });
+
+        if (response.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/users/login";
+            return;
+        }
         if (!response.ok) throw new Error("삭제 실패");
 
         alert("게시글이 삭제되었습니다.");
@@ -90,7 +120,7 @@ document.querySelector(".delete-btn").addEventListener("click", async () => {
 // 댓글 추가 기능
 async function addComment() {
     const postId = document.body.getAttribute('data-post-id');
-    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
     const commentInput = document.querySelector(".comment-input");
     const commentContent = commentInput.value.trim();
 
@@ -104,14 +134,16 @@ async function addComment() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}` // JWT 인증 추가
             },
-            body: JSON.stringify({
-                postId: postId,
-                userId: userId,
-                content: commentContent,
-            }),
+            body: JSON.stringify({ content: commentContent })
         });
 
+        if (response.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/users/login";
+            return;
+        }
         if (!response.ok) throw new Error("댓글 등록 실패");
 
         const newComment = await response.json();
@@ -133,7 +165,7 @@ function renderComments(comments) {
         return;
     }
 
-    comments.forEach(renderNewComment); // 각 댓글에 대해 renderNewComment 호출
+    comments.forEach(renderNewComment);
 }
 
 // 새로운 댓글을 화면에 추가하는 함수
