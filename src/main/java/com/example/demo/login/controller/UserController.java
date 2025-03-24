@@ -1,6 +1,8 @@
 package com.example.demo.login.controller;
 
 import com.example.demo.login.service.UserService;
+import com.example.demo.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,22 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     // 비밀번호 변경
     @PatchMapping("/{userId}/password")
-    public ResponseEntity<String> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> request) {
+    public ResponseEntity<String> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
+        token = token.substring(7);
+        Long tokenUserId = jwtUtil.extractUserId(token);
+        if (!userId.equals(tokenUserId)) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
         try {
             String newPassword = request.get("password");
             userService.updatePassword(userId, newPassword);
@@ -44,7 +58,18 @@ public class UserController {
 
     // 닉네임 변경
     @PatchMapping("/{userId}")
-    public ResponseEntity<String> updateNickname(@PathVariable Long userId, @RequestBody Map<String, String> request) {
+    public ResponseEntity<String> updateNickname(@PathVariable Long userId, @RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
+        token = token.substring(7);
+        Long tokenUserId = jwtUtil.extractUserId(token);
+        if (!userId.equals(tokenUserId)) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
         try {
             String newNickname = request.get("nickname");
             userService.updateNickname(userId, newNickname);
@@ -56,7 +81,18 @@ public class UserController {
 
     // 회원 탈퇴
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId, HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
+        token = token.substring(7);
+        Long tokenUserId = jwtUtil.extractUserId(token);
+        if (!userId.equals(tokenUserId)) {
+            return ResponseEntity.status(403).body("권한이 없습니다.");
+        }
+
         try {
             userService.deleteUser(userId);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
