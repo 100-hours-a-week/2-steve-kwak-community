@@ -6,6 +6,7 @@ import com.example.demo.post.dto.PostResponseDto;
 import com.example.demo.post.service.PostLikeService;
 import com.example.demo.post.service.PostService;
 import com.example.demo.login.domain.User;
+import com.example.demo.post.service.StorageService;
 import com.example.demo.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private  final StorageService storageService;
 
     // 게시글 목록 조회
     @GetMapping
@@ -192,6 +195,7 @@ public class PostController {
 
 
 
+
     // 게시글 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, HttpServletRequest request) {
@@ -206,4 +210,19 @@ public class PostController {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한 없음
     }
+    // 이미지 업로드 처리
+    // 이미지 업로드 처리
+    @PostMapping("/upload/image")
+    @ResponseBody
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile image) {
+        try {
+            // 이미지 파일 저장
+            String imageUrl = storageService.saveFile(image);
+            return ResponseEntity.ok().body(imageUrl); // 직접 이미지 URL을 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("이미지 업로드 중 오류가 발생했습니다.");
+        }
+    }
+
 }
