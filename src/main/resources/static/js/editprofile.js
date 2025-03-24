@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const helperText = document.querySelector(".helper-text");
 
     const userId = document.getElementById("user-id")?.value;
+    const token = localStorage.getItem("token");
 
-    if (!userId) {
+    if (!userId || !token) {
         alert("잘못된 접근입니다.");
         window.location.href = "/users/login";
         return;
@@ -37,7 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             const response = await fetch(`/users/${userId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ nickname: newNickname }),
             });
 
@@ -62,11 +66,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!confirmDelete) return;
 
         try {
-            const response = await fetch(`/users/${userId}`, { method: "DELETE" });
+            const response = await fetch(`/users/${userId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
             if (!response.ok) throw new Error("회원 탈퇴 실패");
 
             alert("회원 탈퇴가 완료되었습니다.");
-            localStorage.removeItem("user_id"); // 로컬 스토리지에서 유저 ID 삭제
+            localStorage.removeItem("token"); // 토큰 삭제
+            localStorage.removeItem("user_id"); // 유저 ID 삭제
             window.location.href = "/users/login";
         } catch (error) {
             console.error(error);
