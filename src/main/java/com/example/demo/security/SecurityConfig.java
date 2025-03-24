@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/posts/api1/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/posts/*/comments").permitAll()
                         .requestMatchers(HttpMethod.GET,"/posts/makepost").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/users/*/profile").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
