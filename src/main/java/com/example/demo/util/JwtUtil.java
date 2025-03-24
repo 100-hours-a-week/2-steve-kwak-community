@@ -33,7 +33,6 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
 
-        System.out.println(" jwt util- 토큰에서 추출한 userId 출력: " + userIdStr); // 토큰에서 추출한 userId 출력
         return Long.parseLong(userIdStr);
     }
 
