@@ -168,7 +168,64 @@ function renderComments(comments) {
 
     comments.forEach(renderNewComment);
 }
+// 댓글 추가 기능 (JWT 적용)
+async function addComment() {
+    const postId = document.body.getAttribute('data-post-id');
+    const token = localStorage.getItem("token");
+    const commentInput = document.querySelector(".comment-input");
+    const commentContent = commentInput.value.trim();
 
+    if (!commentContent) {
+        alert("댓글을 입력하세요.");
+        return;
+    }
+
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/users/login";
+        return;
+    }
+
+    try {
+        const response = await fetch(`/posts/${postId}/comments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // JWT 추가
+            },
+            body: JSON.stringify({ content: commentContent }) // userId 제거 (서버에서 JWT로 추출)
+        });
+
+        if (response.status === 401) {
+            alert("인증이 필요합니다. 다시 로그인해주세요.");
+            localStorage.removeItem("token");
+            window.location.href = "/users/login";
+            return;
+        }
+        if (!response.ok) throw new Error("댓글 등록 실패");
+
+        const newComment = await response.json();
+        commentInput.value = ""; // 입력 필드 초기화
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        alert("댓글 등록에 실패했습니다.");
+    }
+}
+
+
+// 댓글 리스트 렌더링
+function renderComments(comments) {
+    const commentList = document.querySelector(".comment-list");
+    commentList.innerHTML = "";
+
+    if (comments.length === 0) {
+        commentList.innerHTML = "<p>댓글이 없습니다.</p>";
+        return;
+    }
+
+    comments.forEach(renderNewComment);
+}
 // 새로운 댓글을 화면에 추가하는 함수
 function renderNewComment(comment) {
     const commentList = document.querySelector(".comment-list");
