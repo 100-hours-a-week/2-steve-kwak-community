@@ -1,5 +1,8 @@
 package com.example.demo.post.service;
 
+import com.example.demo.security.JwtAuthenticationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +19,8 @@ public class StorageService {
     @Value("${upload.directory}")
     private String uploadDirectory;
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     public String saveFile(MultipartFile file) throws IOException {
         // 파일이 비어있다면 예외 발생
         if (file.isEmpty()) {
@@ -24,6 +29,7 @@ public class StorageService {
 
         // 저장할 디렉토리 경로 생성
         Path path = Paths.get(uploadDirectory, file.getOriginalFilename());
+        logger.info("path: ",path);
 
         // 디렉토리가 없다면 디렉토리 생성
         if (!Files.exists(path.getParent())) {
@@ -32,6 +38,7 @@ public class StorageService {
 
         // 파일을 지정된 경로에 저장
         file.transferTo(path);
+
 
         // 저장된 파일의 경로를 반환
         return path.toString();
