@@ -15,3 +15,5 @@ spring:
       static-locations: classpath:/static/
 jwt:
   secret: c3ByaW5nU2VjdXJpdHlKd3RQcmFjdGljZUtleUphbmdKam9sa2l0
+upload:
+  directory: /path/
