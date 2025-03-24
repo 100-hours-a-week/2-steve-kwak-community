@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nicknameInput = document.querySelector("#nickname");
     const helperText = document.querySelector(".helper-text");
 
+    const changeBtn = document.querySelector("#change-btn");
+    const profilePicInput = document.querySelector("#profile-pic-input");
+    const profilePic = document.querySelector("#profile-pic");
+
     const userId = document.getElementById("user-id")?.value;
     const token = localStorage.getItem("token");
 
@@ -22,6 +26,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             helperText.style.color = "red";
         } else {
             helperText.textContent = "";
+        }
+    });
+
+    // 프로필 사진 변경 버튼 클릭 시 파일 입력 필드 활성화
+    changeBtn.addEventListener("click", () => {
+        profilePicInput.click(); // 파일 선택 input 클릭
+    });
+
+    // 파일이 선택되었을 때 프로필 사진 미리보기
+    profilePicInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePic.src = e.target.result; // 미리보기 이미지 변경
+            };
+            reader.readAsDataURL(file); // 파일을 읽어서 미리보기 표시
         }
     });
 
