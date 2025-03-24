@@ -17,8 +17,12 @@
 <main>
     <h2>회원정보수정</h2>
     <div class="profile-container">
-        <img src="profile-placeholder.png" alt="프로필 사진" class="profile-pic">
-        <button class="change-btn">변경</button>
+        <!-- 프로필 사진 영역 -->
+        <img src="profile-placeholder.png" alt="프로필 사진" class="profile-pic" id="profile-pic">
+        <!-- 변경 버튼 -->
+        <button class="change-btn" id="change-btn">변경</button>
+        <!-- 파일 선택 input (기본적으로 숨김) -->
+        <input type="file" id="profile-pic-input" class="hidden" accept="image/*">
     </div>
 
     <form class="form-container">
@@ -42,8 +46,6 @@
         <button class="close-btn">닫기</button>
     </div>
 </main>
-
-
 
 </body>
 </html>
