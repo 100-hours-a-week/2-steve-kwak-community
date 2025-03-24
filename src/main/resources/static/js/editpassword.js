@@ -5,8 +5,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // hidden input에서 userId 가져오기
     const userId = document.getElementById("user-id")?.value;
+    const token = localStorage.getItem("token");
 
-    if (!userId) {
+    if (!userId || !token) {
         alert("잘못된 접근입니다.");
         window.location.href = "/users/login";
         return;
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         passwordError.textContent = "";
         confirmPasswordError.textContent = "";
 
-        let isValid = true; // isValid 초기화
+        let isValid = true;
 
         // 비밀번호 검증 (8~20자, 대소문자, 숫자, 특수문자 포함)
         if (password.length < 8 || password.length > 20 ||
@@ -52,14 +53,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
             const response = await fetch(`/users/${userId}/password`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ password: newPassword }),
             });
 
             if (!response.ok) throw new Error("비밀번호 변경 실패");
 
             alert("비밀번호가 성공적으로 변경되었습니다.");
-            window.location.href = "/users/login"; // 로그인 페이지로 이동
+            window.location.href = "/users/login";
         } catch (error) {
             console.error(error);
             alert("비밀번호 변경에 실패했습니다.");
