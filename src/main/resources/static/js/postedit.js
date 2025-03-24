@@ -20,9 +20,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
-    // 서버로 요청하기 전에 Authorization 헤더 확인
-    console.log("Authorization Header: Bearer " + token); // 헤더 확인
-
     try {
         const response = await fetch(`/posts/${postId}`, {
             headers: {
@@ -58,8 +55,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
         };
-        console.log('Request Headers:', headers);
-        console.log('Request Body:', JSON.stringify(updatedPost));
         try {
             const response = await fetch(`/posts/${postId}`, {
                 method: "PUT",
