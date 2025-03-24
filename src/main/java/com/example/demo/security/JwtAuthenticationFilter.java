@@ -37,11 +37,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            logger.info("필터 토큰 확인: {}", token);
 
             try {
                 Long userId = jwtUtil.extractUserId(token);
-                logger.info("필터 아이디 추출: {}", userId);
 
                 if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     User user = userService.findById(userId);
@@ -51,30 +49,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             role = "USER";
                         }
 
-                        logger.info("Role: {}", role);
-
                         // UserDetails 대신 User 객체를 Principal로 사용
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(user, null,
                                         Collections.singletonList(new SimpleGrantedAuthority(role)));
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        logger.info("필터에서 인증넣기");
                     } else {
-                        logger.warn("Invalid token or expired token");
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().write("Invalid or expired token");
                         return;
                     }
                 }
             } catch (Exception e) {
-                logger.error("Error extracting or validating token", e);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Authentication failed: " + e.getMessage());
                 return;
             }
         }
-        logger.info("필터 token:"+token);
         filterChain.doFilter(request, response);
     }
 }
