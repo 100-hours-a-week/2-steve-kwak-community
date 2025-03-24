@@ -33,12 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("image", file);
 
         try {
-            const response = await fetch("/upload/image", {
+            const response = await fetch("/posts/upload/image", {
                 method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`, // JWT 토큰을 Authorization 헤더로 보냄
-                },
-                body: formData,
+                body: formData
             });
 
             if (!response.ok) throw new Error("이미지 업로드 실패");
