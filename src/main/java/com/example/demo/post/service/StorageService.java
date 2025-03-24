@@ -29,7 +29,6 @@ public class StorageService {
 
         // 저장할 디렉토리 경로 생성
         Path path = Paths.get(uploadDirectory, file.getOriginalFilename());
-        logger.info("path: ",path);
 
         // 디렉토리가 없다면 디렉토리 생성
         if (!Files.exists(path.getParent())) {
