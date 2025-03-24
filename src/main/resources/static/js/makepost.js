@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             return data.imageUrl; // 서버에서 반환된 이미지 URL을 리턴
         } catch (error) {
-            console.error("이미지 업로드 중 오류 발생:", error);
             alert("이미지 업로드 중 오류가 발생했습니다.");
             return null;
         }
@@ -66,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // 이미지 파일이 선택된 경우 서버로 업로드
         if (imageFile) {
             imageUrl = await uploadImage(imageFile);
-            console.log("이미지 url:",imageUrl);
             if (!imageUrl) return; // 이미지 업로드 실패 시 종료
         }
 
@@ -76,8 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
             content: content,
             imageUrl: imageUrl, // 서버에서 받은 이미지 URL
         };
-
-        console.log("📌 전송할 데이터:", newPost);
 
         try {
             const response = await fetch("/posts", {
