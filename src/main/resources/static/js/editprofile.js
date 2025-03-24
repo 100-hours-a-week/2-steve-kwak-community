@@ -71,7 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("닉네임이 성공적으로 변경되었습니다.");
             modal.classList.add("hidden");
         } catch (error) {
-            console.error(error);
             alert("닉네임 변경에 실패했습니다.");
         }
     });
