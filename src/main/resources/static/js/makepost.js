@@ -27,14 +27,29 @@ document.addEventListener("DOMContentLoaded", function () {
     titleInput.addEventListener("input", checkForm);
     contentInput.addEventListener("input", checkForm);
 
-    // 이미지 파일을 Base64로 변환하는 함수
-    function convertToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+    // 이미지 파일을 서버에 업로드하는 함수
+    async function uploadImage(file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const response = await fetch("/upload/image", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`, // JWT 토큰을 Authorization 헤더로 보냄
+                },
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error("이미지 업로드 실패");
+
+            const data = await response.json();
+            return data.imageUrl; // 서버에서 반환된 이미지 URL을 리턴
+        } catch (error) {
+            console.error("이미지 업로드 중 오류 발생:", error);
+            alert("이미지 업로드 중 오류가 발생했습니다.");
+            return null;
+        }
     }
 
     // 게시글 제출
@@ -51,22 +66,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // 이미지 파일이 선택된 경우 Base64로 변환
+        // 이미지 파일이 선택된 경우 서버로 업로드
         if (imageFile) {
-            try {
-                imageUrl = await convertToBase64(imageFile);
-            } catch (error) {
-                console.error("이미지 변환 중 오류 발생:", error);
-                alert("이미지 변환 중 오류가 발생했습니다.");
-                return;
-            }
+            imageUrl = await uploadImage(imageFile);
+            console.log("이미지 url:",imageUrl);
+            if (!imageUrl) return; // 이미지 업로드 실패 시 종료
         }
 
         const newPost = {
             userId: userId,
             title: title,
             content: content,
-            imageUrl: imageUrl, // Base64 인코딩된 이미지 (없으면 null)
+            imageUrl: imageUrl, // 서버에서 받은 이미지 URL
         };
 
         console.log("📌 전송할 데이터:", newPost);
@@ -74,7 +85,10 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/posts", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // JWT 토큰을 Authorization 헤더로 보냄
+                },
                 body: JSON.stringify(newPost),
             });
 
