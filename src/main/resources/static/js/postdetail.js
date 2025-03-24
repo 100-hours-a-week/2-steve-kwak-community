@@ -34,6 +34,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector(".view-count").textContent = `조회수 ${post.viewCount}`;
         document.querySelector(".comment-count").textContent = `댓글 ${post.commentCount}`;
 
+        // 이미지 URL이 있으면 이미지 태그에 추가
+        if (post.imageUrl) {
+            const imageElement = document.querySelector(".post-image");
+            imageElement.src = post.imageUrl;
+            imageElement.alt = "게시글 이미지"; // 이미지 설명 추가
+            imageElement.style.display = "block"; // 이미지 보이게 설정
+        }
+
         // 댓글 불러오기
         const commentResponse = await fetch(`/posts/${postId}/comments`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -53,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
     }
 });
+
 
 // 게시글 수정 버튼 클릭
 document.querySelector(".edit-btn").addEventListener("click", () => {
