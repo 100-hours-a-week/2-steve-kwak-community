@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/login").permitAll()
                         .requestMatchers("/users").permitAll()
                         .requestMatchers("/posts").permitAll()
-                        .requestMatchers("/posts/upload/image").permitAll()
+                        .requestMatchers("/posts/upload/image/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/posts/postedit/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/users/*/password").permitAll()
                         .requestMatchers(HttpMethod.GET,"/header").permitAll()
