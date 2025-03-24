@@ -210,19 +210,19 @@ public class PostController {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한 없음
     }
-    // 이미지 업로드 처리
-    // 이미지 업로드 처리
     @PostMapping("/upload/image")
-    @ResponseBody
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile image) {
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) {
+        System.out.println("이미지 파일 이름: " + file.getOriginalFilename()); // ✅ 로그 추가
+        System.out.println("이미지 파일 크기: " + file.getSize());
         try {
-            // 이미지 파일 저장
-            String imageUrl = storageService.saveFile(image);
-            return ResponseEntity.ok().body(imageUrl); // 직접 이미지 URL을 반환
+            String imageUrl = storageService.saveFile(file);
+            return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("이미지 업로드 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "이미지 업로드 실패"));
         }
     }
+
+
+
 
 }
