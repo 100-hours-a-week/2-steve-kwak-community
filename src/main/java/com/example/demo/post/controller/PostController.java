@@ -162,16 +162,12 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Map<String, String> postData, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        System.out.println("게시글 수정 postid: " + postId); // 토큰 출력
         if (token == null || !token.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 토큰이 없거나 형식이 잘못됨
         }
 
         token = token.substring(7);  // "Bearer "를 제거하고 토큰만 추출
-        System.out.println("게시글 수정 Extracted Token: " + token); // 토큰 출력
-
         Long userId = jwtUtil.extractUserId(token);
-        System.out.println("게시글 수정 User ID: " + userId); // 사용자 ID 출력
 
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 유효한 userId가 아닐 경우
@@ -212,8 +208,6 @@ public class PostController {
     }
     @PostMapping("/upload/image")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) {
-        System.out.println("이미지 파일 이름: " + file.getOriginalFilename()); // ✅ 로그 추가
-        System.out.println("이미지 파일 크기: " + file.getSize());
         try {
             String imageUrl = storageService.saveFile(file);
             return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
