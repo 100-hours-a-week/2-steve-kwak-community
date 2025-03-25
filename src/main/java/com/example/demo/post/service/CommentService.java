@@ -49,6 +49,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 게시글 ID입니다."));
 
+        // 댓글 객체 생성
         Comment comment = Comment.builder()
                 .user(user)
                 .post(post)
@@ -57,8 +58,16 @@ public class CommentService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        return commentRepository.save(comment);
+        // 댓글 저장
+        commentRepository.save(comment);
+
+        // 게시글의 댓글 수 증가 후 저장
+        post.setCommentCount(post.getCommentCount() + 1);
+        postRepository.save(post);
+
+        return comment;
     }
+
 
     // 댓글 삭제
     @Transactional
