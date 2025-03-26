@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Controller
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -29,22 +27,10 @@ public class PostLikeController {
     @PatchMapping("/{postId}/like")
     @ResponseBody
     public ResponseEntity<PostResponseDto> likePost(@PathVariable Long postId, HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+        // JWT 토큰 검증 및 userId 추출
+        Long userId = jwtUtil.extractUserIdFromRequest(request);
 
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // 토큰이 없거나 형식이 잘못됨
-        }
-
-        token = token.substring(7);  // "Bearer "를 제거하고 토큰만 추출
-
-        // JWT에서 사용자 ID 추출
-        Long userId = jwtUtil.extractUserId(token);
-
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // 유효한 userId가 아닐 경우
-        }
-
-        // userId로 User 조회
+        // 유저 ID로 User 조회
         User user = userService.findById(userId);
 
         if (user == null) {
