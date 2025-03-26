@@ -72,4 +72,8 @@ public class JwtUtil {
             throw new JwtException("유효하지 않거나 만료된 토큰입니다.");
         }
     }
+    // JWT가 유효한지 검사
+    public boolean validateToken(String token, Long userId) {
+        return (userId.toString().equals(extractUserId(token).toString()) && !isTokenExpired(token));
+    }
 }
