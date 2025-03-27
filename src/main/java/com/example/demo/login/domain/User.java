@@ -43,10 +43,12 @@ public class User {
     private List<Post> posts;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean isDeleted = false;  // 회원 탈퇴 여부 (기본값: false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private Role role = Role.USER;  // 기본 역할은 "USER"
 
     //빌더 패턴을 활용한 객체 수정
