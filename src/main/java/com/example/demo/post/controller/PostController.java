@@ -119,23 +119,26 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Map<String, String> postData, HttpServletRequest request) {
+    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post post, HttpServletRequest request) {
+        // 현재 로그인된 사용자 ID 추출
         Long userId = getUserIdFromRequest(request);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        Post post = new Post();
-        post.setTitle(postData.get("title"));
-        post.setContent(postData.get("content"));
-
+        // 게시글 수정 서비스 호출
         Post updatedPost = postService.updatePost(postId, post, userId);
+
+        // 수정된 게시글이 없으면 권한 오류
         if (updatedPost == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+        // 수정된 게시글 반환
         return ResponseEntity.ok(updatedPost);
     }
+
+
 
     // 게시글 삭제
     @DeleteMapping("/{postId}")
