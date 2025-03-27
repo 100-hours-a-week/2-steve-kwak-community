@@ -35,7 +35,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    // 게시글 수정 (setter 활용)
+
     // 게시글 수정
     @Transactional
     public Post updatePost(Long postId, Post post, Long userId) {
@@ -48,12 +48,13 @@ public class PostService {
         if (!existingPost.getAuthor().getId().equals(userId)) {
             return null; // 권한 없음
         }
-        // 게시글 수정
-        existingPost.setTitle(post.getTitle());
-        existingPost.setContent(post.getContent());
+        // 게시글 수정 (builder 사용)
+        existingPost = existingPost.updatePost(post.getTitle(), post.getContent());
 
+        // 수정된 게시글 저장
         return postRepository.save(existingPost);
     }
+
 
 
     // 게시글 삭제
