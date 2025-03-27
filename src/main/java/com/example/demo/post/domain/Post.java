@@ -11,10 +11,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "post")
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  // 기본 생성자 보호
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Post {
 
     @Id
@@ -36,13 +36,16 @@ public class Post {
     private String imageUrl;
 
     @Column(nullable = false)
-    private int commentCount;
+    @Builder.Default
+    private int commentCount = 0;  // 기본값 설정
 
     @Column(nullable = false)
-    private int viewCount;
+    @Builder.Default
+    private int viewCount = 0;
 
     @Column(nullable = false)
-    private int likeCount;
+    @Builder.Default
+    private int likeCount = 0;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -57,5 +60,24 @@ public class Post {
     @JsonManagedReference // 순환 참조 방지
     private List<Comment> comments;
 
+    // 댓글 수 증가
+    public Post increaseCommentCount() {
+        return this.toBuilder()
+                .commentCount(this.commentCount + 1)
+                .build();
+    }
 
+    // 조회수 증가
+    public Post increaseViewCount() {
+        return this.toBuilder()
+                .viewCount(this.viewCount + 1)
+                .build();
+    }
+
+    // 좋아요 수 증가
+    public Post increaseLikeCount() {
+        return this.toBuilder()
+                .likeCount(this.likeCount + 1)
+                .build();
+    }
 }
