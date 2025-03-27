@@ -80,4 +80,12 @@ public class Post {
                 .likeCount(this.likeCount + 1)
                 .build();
     }
+    // 빌더 패턴을 활용하여 객체 수정
+    public Post updatePost(String title, String content) {
+        return this.toBuilder()
+                .title(title)
+                .content(content)
+                .updatedAt(LocalDateTime.now())  // 수정 시 수정 시간 갱신
+                .build();
+    }
 }
