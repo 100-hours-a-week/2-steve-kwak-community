@@ -4,6 +4,7 @@ import com.example.demo.login.domain.User;
 import com.example.demo.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 public class LoginService {
 
     private final UserRepository userRepository;
-
+    @Transactional(readOnly = true)
     public User authenticateUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
