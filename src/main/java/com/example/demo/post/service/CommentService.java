@@ -40,8 +40,7 @@ public class CommentService {
         return commentList;
     }
 
-
-    // 댓글 작성
+    // 댓글 수 증가
     @Transactional
     public Comment createComment(Long postId, Long userId, String content) {
         User user = userRepository.findById(userId)
@@ -61,9 +60,10 @@ public class CommentService {
         // 댓글 저장
         commentRepository.save(comment);
 
-        // 게시글의 댓글 수 증가 후 저장
-        post.setCommentCount(post.getCommentCount() + 1);
-        postRepository.save(post);
+        // 게시글의 댓글 수 증가 후 저장 (increaseCommentCount() 메서드 사용)
+        post = post.increaseCommentCount();  // 댓글 수 증가
+
+        postRepository.save(post); // 변경된 게시글 저장
 
         return comment;
     }
