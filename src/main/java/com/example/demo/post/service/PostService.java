@@ -18,11 +18,13 @@ public class PostService {
     private final PostRepository postRepository;
 
     // 게시글 목록 조회
+    @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
     // 특정 게시글 조회 (Optional 반환)
+    @Transactional(readOnly = true)
     public Optional<Post> getPostById(Long postId) {
         return postRepository.findById(postId);
     }
