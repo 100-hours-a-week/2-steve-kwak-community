@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "post_like")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
