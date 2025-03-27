@@ -27,21 +27,23 @@ public class UserService {
     @Transactional
     public void updateNickname(Long userId, String newNickname) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        user.setNickname(newNickname);
-        userRepository.save(user);
+        User updatedUser = user.updateNickname(newNickname);
+        userRepository.save(updatedUser);
     }
+
 
     // 비밀번호 변경 (예외 던지는 방식)
     @Transactional
     public void updatePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        user.setPassword(newPassword); // 실제 적용 시 암호화 필요
-        userRepository.save(user);
+        User updatedUser = user.updatePassword(newPassword);
+        userRepository.save(updatedUser);
     }
+
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
