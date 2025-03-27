@@ -19,6 +19,7 @@ public class UserService {
     private final CommentRepository commentRepository;
 
     // 사용자 ID로 사용자 조회
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);  // Optional<User> 반환
         return user.orElse(null);  // 사용자 없으면 null 반환
