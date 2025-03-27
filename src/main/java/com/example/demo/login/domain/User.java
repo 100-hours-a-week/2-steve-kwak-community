@@ -1,6 +1,5 @@
 package com.example.demo.login.domain;
 
-import com.example.demo.post.domain.Comment;
 import com.example.demo.post.domain.Post;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -11,11 +10,10 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter // 업데이트 가능하도록 추가
 @Table(name = "user")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자 보호
+@AllArgsConstructor(access = AccessLevel.PRIVATE)  // 빌더를 통한 생성만 허용
+@Builder(toBuilder = true) // 기존 객체를 기반으로 새로운 객체 생성 가능하도록 설정
 public class User {
 
     @Id
@@ -40,15 +38,43 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Post> posts;
 
     @Column(nullable = false)
     private boolean isDeleted = false;  // 회원 탈퇴 여부 (기본값: false)
 
-    @Enumerated(EnumType.STRING)  // Enum 타입으로 저장
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.USER;  // 기본 역할은 "USER"로 설정
+    private Role role = Role.USER;  // 기본 역할은 "USER"
 
+    //빌더 패턴을 활용한 객체 수정
+    public User updatePassword(String newPassword) {
+        return this.toBuilder()
+                .password(newPassword)
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public User updateNickname(String newNickname) {
+        return this.toBuilder()
+                .nickname(newNickname)
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public User updateProfileImage(String newProfileImageUrl) {
+        return this.toBuilder()
+                .profileImageUrl(newProfileImageUrl)
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public User deactivateUser() {
+        return this.toBuilder()
+                .isDeleted(true)
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }
