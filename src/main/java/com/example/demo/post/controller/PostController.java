@@ -119,12 +119,17 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post post, HttpServletRequest request) {
+    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Map<String, String> postData, HttpServletRequest request) {
         // 현재 로그인된 사용자 ID 추출
         Long userId = getUserIdFromRequest(request);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+        // Map을 Post 객체로 변환
+        Post post = Post.builder()
+                .title(postData.get("title"))
+                .content(postData.get("content"))
+                .build();
 
         // 게시글 수정 서비스 호출
         Post updatedPost = postService.updatePost(postId, post, userId);
